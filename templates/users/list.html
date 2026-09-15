@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Members{% endblock %}
+{% block content %}
+<div class="toolbar">
+    <div>
+        <h1>Members</h1>
+        <p class="page-sub">{{ users|length }} registered member{{ '' if users|length == 1 else 's' }}</p>
+    </div>
+    <a class="btn" href="{{ url_for('users.add_user') }}">Add member</a>
+</div>
+
+<form class="search-inline" method="get" action="{{ url_for('users.search_users') }}">
+    <input type="text" name="name" placeholder="Search by name...">
+    <input type="text" name="email" placeholder="Search by email...">
+    <button class="btn btn--ghost" type="submit">Search</button>
+</form>
+
+{% if users %}
+<table class="ledger">
+    <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Department</th><th></th></tr></thead>
+    <tbody>
+        {% for u in users %}
+        <tr>
+            <td>{{ u.user_id }}</td>
+            <td>{{ u.full_name }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.phone }}</td>
+            <td>{{ u.department }}</td>
+            <td class="actions">
+                <a href="{{ url_for('users.edit_user', user_id=u.user_id) }}">Edit</a>
+                <form method="post" action="{{ url_for('users.delete_user', user_id=u.user_id) }}" style="display:inline"
+                      onsubmit="return confirm('Delete member \'{{ u.full_name }}\'? This cannot be undone.');">
+                    <a href="#" onclick="this.closest('form').submit(); return false;" style="color:#A33333;">Delete</a>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="empty-state">No members registered yet. <a href="{{ url_for('users.add_user') }}">Add the first one</a>.</div>
+{% endif %}
+{% endblock %}

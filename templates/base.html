@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Library{% endblock %} · Reading Room</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    {% if session.get('role') %}
+    <div class="shell">
+        <aside class="sidebar">
+            <div class="sidebar__brand">
+                Reading Room
+                <span>Library Management</span>
+            </div>
+
+            <div class="sidebar__section-label">Overview</div>
+            <nav>
+                <a href="{{ url_for('dashboard') }}" class="{{ 'active' if request.endpoint == 'dashboard' }}">Dashboard</a>
+            </nav>
+
+            {% if session.get('role') == 'admin' %}
+            <div class="sidebar__section-label">Catalog</div>
+            <nav>
+                <a href="{{ url_for('books.list_books') }}" class="{{ 'active' if request.endpoint and request.endpoint.startswith('books.') }}">Books</a>
+                <a href="{{ url_for('users.list_users') }}" class="{{ 'active' if request.endpoint and request.endpoint.startswith('users.') }}">Members</a>
+            </nav>
+            {% endif %}
+
+            <div class="sidebar__section-label">Circulation</div>
+            <nav>
+                <a href="{{ url_for('issue.issue_form') }}" class="{{ 'active' if request.endpoint == 'issue.issue_form' }}">Issue Book</a>
+                <a href="{{ url_for('issue.return_form') }}" class="{{ 'active' if request.endpoint == 'issue.return_form' }}">Return Book</a>
+                <a href="{{ url_for('issue.list_issued') }}" class="{{ 'active' if request.endpoint == 'issue.list_issued' }}">Issued Books</a>
+            </nav>
+
+            <div class="sidebar__footer">
+                Signed in as<br><strong>{{ session.get('username') }}</strong> ({{ session.get('role') }})
+                <form method="post" action="{{ url_for('auth.logout') }}">
+                    <button type="submit">Log out</button>
+                </form>
+            </div>
+        </aside>
+
+        <main class="main">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash {{ 'flash--error' if category == 'error' }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    {% else %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ 'flash--error' if category == 'error' }}" style="max-width:360px;margin:20px auto 0;">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block content_bare %}{% endblock %}
+    {% endif %}
+</body>
+</html>

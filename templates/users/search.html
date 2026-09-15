@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Search members{% endblock %}
+{% block content %}
+<h1>Search results</h1>
+<p class="page-sub">
+    {% if query.name or query.email %}
+        Matching "{{ query.name }}{% if query.name and query.email %} / {% endif %}{{ query.email }}"
+    {% else %}
+        Enter a name or email to search
+    {% endif %}
+</p>
+
+<form class="search-inline" method="get" action="{{ url_for('users.search_users') }}">
+    <input type="text" name="name" placeholder="Search by name..." value="{{ query.name }}">
+    <input type="text" name="email" placeholder="Search by email..." value="{{ query.email }}">
+    <button class="btn btn--ghost" type="submit">Search</button>
+</form>
+
+{% if users %}
+<table class="ledger">
+    <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Department</th></tr></thead>
+    <tbody>
+        {% for u in users %}
+        <tr>
+            <td>{{ u.user_id }}</td>
+            <td>{{ u.full_name }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.phone }}</td>
+            <td>{{ u.department }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% elif query.name or query.email %}
+<div class="empty-state">No members matched that search.</div>
+{% endif %}
+
+<p style="margin-top:20px;"><a href="{{ url_for('users.list_users') }}">&larr; Back to all members</a></p>
+{% endblock %}

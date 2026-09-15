@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Issued books{% endblock %}
+{% block content %}
+<h1>Issued books</h1>
+<p class="page-sub">{{ records|length }} record{{ '' if records|length == 1 else 's' }}</p>
+
+{% if records %}
+<table class="ledger">
+    <thead>
+        <tr><th>Issue ID</th><th>Member</th><th>Book</th><th>Issued</th><th>Due</th><th>Returned</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+        {% for r in records %}
+        <tr>
+            <td>{{ r.issue_id }}</td>
+            <td>{{ r.user }}</td>
+            <td>{{ r.book }}</td>
+            <td>{{ r.issue_date }}</td>
+            <td>{{ r.due_date }}</td>
+            <td>{{ r.return_date or '—' }}</td>
+            <td>
+                {% if r.status == 'Returned' %}
+                    <span class="tag tag--sage">{{ r.status }}</span>
+                {% else %}
+                    <span class="tag">{{ r.status }}</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="empty-state">No books have been issued yet.</div>
+{% endif %}
+{% endblock %}

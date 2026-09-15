@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit member' if user else 'Add member' }}{% endblock %}
+{% block content %}
+<h1>{{ 'Edit member' if user else 'Add a member' }}</h1>
+<p class="page-sub">{{ 'Update this member\'s record.' if user else 'Register a new library member.' }}</p>
+
+<form method="post" class="card-form">
+    <div class="field">
+        <label for="full_name">Full name</label>
+        <input type="text" id="full_name" name="full_name" value="{{ user.full_name if user else form.get('full_name','') }}" required>
+    </div>
+    <div class="form-row">
+        <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="{{ user.email if user else form.get('email','') }}" required>
+        </div>
+        <div class="field">
+            <label for="phone">Phone</label>
+            <input type="text" id="phone" name="phone" value="{{ user.phone if user else form.get('phone','') }}" required>
+        </div>
+    </div>
+    <div class="field">
+        <label for="department">Department</label>
+        <input type="text" id="department" name="department" value="{{ user.department if user else form.get('department','') }}" required>
+    </div>
+    {% if not user %}
+    <div class="field">
+        <label for="password">Login password</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    {% endif %}
+
+    <button type="submit" class="btn">{{ 'Save changes' if user else 'Add member' }}</button>
+    <a href="{{ url_for('users.list_users') }}" class="btn btn--ghost">Cancel</a>
+</form>
+{% endblock %}

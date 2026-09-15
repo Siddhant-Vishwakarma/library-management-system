@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Issue a book{% endblock %}
+{% block content %}
+<h1>Issue a book</h1>
+<p class="page-sub">Check a title out to a member. Due back in 15 days.</p>
+
+<form method="post" class="card-form">
+    <div class="form-row">
+        <div class="field">
+            <label for="user_id">Member ID</label>
+            <input type="text" id="user_id" name="user_id" value="{{ form.get('user_id','') }}" required>
+        </div>
+        <div class="field">
+            <label for="book_id">Book ID</label>
+            <input type="text" id="book_id" name="book_id" value="{{ form.get('book_id','') }}" required>
+        </div>
+    </div>
+    <button type="submit" class="btn">Issue book</button>
+</form>
+
+{% if result %}
+<div class="flash" style="max-width:520px;">
+    <strong>Issued to {{ result.user }}</strong><br>
+    {{ result.book }}<br>
+    Issued {{ result.issue_date }} · Due back {{ result.due_date }}
+</div>
+{% endif %}
+{% endblock %}

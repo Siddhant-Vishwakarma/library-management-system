@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>Welcome, {{ session.get('username') }}</h1>
+<p class="page-sub">
+    {% if session.get('role') == 'admin' %}
+        You're signed in as an administrator.
+    {% else %}
+        You're signed in as a member.
+    {% endif %}
+</p>
+
+<div class="quick-links">
+    {% if session.get('role') == 'admin' %}
+    <a class="quick-link" href="{{ url_for('books.list_books') }}">
+        <strong>Books</strong>
+        <span>Add, edit, search and remove titles</span>
+    </a>
+    <a class="quick-link" href="{{ url_for('users.list_users') }}">
+        <strong>Members</strong>
+        <span>Manage member records</span>
+    </a>
+    {% endif %}
+    <a class="quick-link" href="{{ url_for('issue.issue_form') }}">
+        <strong>Issue a book</strong>
+        <span>Check a title out to a member</span>
+    </a>
+    <a class="quick-link" href="{{ url_for('issue.return_form') }}">
+        <strong>Return a book</strong>
+        <span>Record a return and any fine</span>
+    </a>
+    <a class="quick-link" href="{{ url_for('issue.list_issued') }}">
+        <strong>Issued books</strong>
+        <span>See what's currently checked out</span>
+    </a>
+</div>
+{% endblock %}

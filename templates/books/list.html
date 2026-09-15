@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Books{% endblock %}
+{% block content %}
+<div class="toolbar">
+    <div>
+        <h1>Books</h1>
+        <p class="page-sub">{{ books|length }} title{{ '' if books|length == 1 else 's' }} in the catalog</p>
+    </div>
+    <a class="btn" href="{{ url_for('books.add_book') }}">Add book</a>
+</div>
+
+<form class="search-inline" method="get" action="{{ url_for('books.search_books') }}">
+    <input type="text" name="title" placeholder="Search by title...">
+    <input type="text" name="author" placeholder="Search by author...">
+    <button class="btn btn--ghost" type="submit">Search</button>
+</form>
+
+{% if books %}
+<table class="ledger">
+    <thead>
+        <tr>
+            <th>ID</th><th>Title</th><th>Author</th><th>Category</th>
+            <th>Total</th><th>Available</th><th>Shelf</th><th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for b in books %}
+        <tr>
+            <td>{{ b.book_id }}</td>
+            <td>{{ b.title }}</td>
+            <td>{{ b.author }}</td>
+            <td>{{ b.category }}</td>
+            <td>{{ b.total_quantity }}</td>
+            <td>
+                {% if b.available_quantity > 0 %}
+                    <span class="tag tag--sage">{{ b.available_quantity }} available</span>
+                {% else %}
+                    <span class="tag tag--danger">none available</span>
+                {% endif %}
+            </td>
+            <td>{{ b.shelf_no }}</td>
+            <td class="actions">
+                <a href="{{ url_for('books.edit_book', book_id=b.book_id) }}">Edit</a>
+                <form method="post" action="{{ url_for('books.delete_book', book_id=b.book_id) }}" style="display:inline"
+                      onsubmit="return confirm('Delete \'{{ b.title }}\'? This cannot be undone.');">
+                    <a href="#" onclick="this.closest('form').submit(); return false;" style="color:#A33333;">Delete</a>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="empty-state">No books in the catalog yet. <a href="{{ url_for('books.add_book') }}">Add the first one</a>.</div>
+{% endif %}
+{% endblock %}

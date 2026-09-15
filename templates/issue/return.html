@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Return a book{% endblock %}
+{% block content %}
+<h1>Return a book</h1>
+<p class="page-sub">Record a return and any fine owed.</p>
+
+<form method="post" class="card-form">
+    <div class="form-row">
+        <div class="field">
+            <label for="issue_id">Issue ID</label>
+            <input type="text" id="issue_id" name="issue_id" value="{{ form.get('issue_id','') }}" required>
+        </div>
+        <div class="field">
+            <label for="book_id">Book ID</label>
+            <input type="text" id="book_id" name="book_id" value="{{ form.get('book_id','') }}" required>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="field">
+            <label for="return_date">Return date</label>
+            <input type="date" id="return_date" name="return_date" value="{{ form.get('return_date','') }}" required>
+        </div>
+        <div class="field">
+            <label for="fine">Fine</label>
+            <input type="number" step="0.01" min="0" id="fine" name="fine" value="{{ form.get('fine', '0') }}">
+        </div>
+    </div>
+    <button type="submit" class="btn">Record return</button>
+</form>
+
+<p style="margin-top:20px;"><a href="{{ url_for('issue.list_issued') }}">Look up an issue ID &rarr;</a></p>
+{% endblock %}
